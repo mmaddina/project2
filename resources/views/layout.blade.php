@@ -19,10 +19,10 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="{{route('article.index')}}">Article<span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
+        <a class="nav-link" href="/article/create">Create article</a>
       </li>
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
@@ -36,11 +36,22 @@
         </div>
       </li>
     </ul>
-    <form class="form-inline my-2 my-lg-0">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-    </form>
+    <div class="form-inline my-2 my-lg-0">
+      @guest
+      <a href="/signin" class="btn btn-outline-success my-2 my-sm-0">Sign In</a>
+      <a href="/signup" class="btn btn-outline-success my-2 my-sm-0">Sign Up</a> 
+      @endguest
+      @auth
+      <a href="/logout" class="btn btn-outline-success my-2 my-sm-0">Sign Out</a> 
+      @endauth
+    </div>
   </div>
 </nav>
 </header>
+<main>
+  <div class="container">
+    @yield('content')
+  </div>
+</main>
 </body>
 </html>
