@@ -21,9 +21,14 @@
       <li class="nav-item active">
         <a class="nav-link" href="{{route('article.index')}}">Article<span class="sr-only">(current)</span></a>
       </li>
+      @can('create')
       <li class="nav-item">
         <a class="nav-link" href="/article/create">Create article</a>
       </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/comment/index">New comments</a>
+      </li>
+      @endcan
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
           Dropdown

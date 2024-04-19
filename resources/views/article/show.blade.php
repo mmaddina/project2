@@ -21,6 +21,12 @@
   <h4>Comments</h4>
 </div>
 
+@if (session('res'))
+<div class="alert-success">
+  <p>Комментарий успешно добавлен и отправлен на модерацию!</p>
+</div>
+@endif
+
 @if ($errors->any())
 <div class="alert-danger">
   <ul>
@@ -53,10 +59,10 @@
     <h5 class="card-title">{{$comment->title}}</h5>
     <p class="card-text">{{$comment->desc}}</p>
     <div class="d-flex">
-        <a class="btn btn-secondary mr-3" href="/article/{{$article->id}}/edit" class="card-link">Edit comment</a>
-        <a class="btn btn-danger mr-3" href="/article/{{$article->id}}/edit" class="card-link">Delete comment</a>
-
-
+      @can('comment',$comment)
+        <a class="btn btn-secondary mr-3" href="/comment/edit/{{$comment->id}}" class="card-link">Edit comment</a>
+        <a class="btn btn-danger mr-3" href="/comment/delete/{{$comment->id}}" class="card-link">Delete comment</a>
+      @endcan
     </div>
 </div>
 </div>
