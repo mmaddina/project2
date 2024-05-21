@@ -7,6 +7,7 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+  @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="antialiased">
 <header>
@@ -29,17 +30,18 @@
         <a class="nav-link" href="/comment/index">New comments</a>
       </li>
       @endcan
+      @auth
       <li class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-expanded="false">
-          Dropdown
+          Notify <span>{{auth()->user()->unreadNotifications()->count()}}</span>
         </a>
         <div class="dropdown-menu">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Something else here</a>
+        @foreach(auth()->user()->unreadNotifications as $notify)
+          <a class="dropdown-item" href="{{route('article.show', ['article'=>$notify->data['idArticle'], 'id_notify'=>$notify->id])}}">{{$notify->data['titleComment']}}</a>
+        @endforeach
         </div>
       </li>
+      @endauth
     </ul>
     <div class="form-inline my-2 my-lg-0">
       @guest
@@ -55,6 +57,9 @@
 </header>
 <main>
   <div class="container">
+   <div id="app">
+    <App />
+  </div>
     @yield('content')
   </div>
 </main>
