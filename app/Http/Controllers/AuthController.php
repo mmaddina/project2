@@ -53,9 +53,11 @@ class AuthController extends Controller
     }
 
     function logout(Request $request){
-        if(request()->expectsJson())
-        auth()->user()->delete();
+        if(request()->expectsJson()){
+                    auth()->user()->delete();
         return response()->json('logout');
+        }
+
         Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
