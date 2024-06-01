@@ -60,11 +60,6 @@ class CommentController extends Controller
         return view('comment.edit', ['comment'=>$comment]);
     }
 
-    // function delete(Comment $comment){
-    //     Gate::authorize('comment', ['comment'=>$comment]);
-    //     return redirect()->route('article.show', ['article'=>1]);
-    // }
-
     public function accept(Comment $comment){
         Cache::forget('comments');
         Cache::forget('article_comment'.$comment->article_id);
@@ -84,65 +79,38 @@ class CommentController extends Controller
         if(request()->expectsjson()) return response()->json($res);
         return redirect()->route('comment.index');
     }
-    // public function update(Request $request, Comment $comment)
-    // {
-    //     $keys = DB::table('cache')
-    //     ->select('key')
-    //     ->whereRaw('`key` GLOB :key', [':key'=> 'comment*[0-9]'])->get();
-    //     Gate::authorize('create',[self::class]);
-    //     $request->validate([
-    //         'date' => 'required',
-    //         'title' => 'required|min:6',
-    //         'text' => 'required'
-    //     ]);
-    //     $article->date = $request->date;
-    //     $article->title = $request->title;
-    //     $article->shortDesc = $request->shortDesc;
-    //     $article->text = $request->text;
-    //     $article->user_id = 1;
-    //     $res = $comment->save();
-    //     if(request()->expectsjson()) return response()->json($res);
-    //     return redirect()->route('comment.show', ['comment'=>$comment->id]);
-    // }
 
-    public function update(Request $request, Comment $comment){
-        Cache::forget('comments');
-        Cache::forget('article_comment' .$comment->article_id);
-        Gate::authorize('comment', ['comment'=>$comment]);
+    public function update(Request $request, Comment $comment)
+    {
         $request->validate([
-            'title'=>'required|min:5',
-            'text'=>'required'
+            'desc' => 'required',
         ]);
-    
-        // $comment->content = $request->content;
-        // $comment->save();
-        $comment->title = $request->title;
-        $comment->desc = $request->text; // Предполагая, что описание комментария хранится в атрибуте 'desc'
-        $res = $comment->save();
-        if(request()->expectsjson()) return response()->json($res);
-        // return redirect()->route('article.show', ['article' => $comment->$article->id]);
-        // return redirect()->route('article.show', ['article' => $comment->article->id]);
-        return redirect()->route('article.show', ['article'=>$request->article_id])->with(['res'=>$res]);        
-        // return view('comment.update', ['comment'=>$comment]);
 
+        if (!$comment) {
+            return redirect()->back()->with('error', 'Comment not found');
+        }
+
+        Cache::forget('comments');
+        Cache::forget('article_comment'.$comment->article_id);
+        $comment->desc = $request->desc;
+        $comment->accept = 0;
+        $res = $comment->save();
+
+        if(request()->expectsjson()) return response()->json($res);
+        return redirect()->route('article.show', ['article'=>$comment->article_id]);
     }
 
-
-
-
-    
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    /*public function destroy(Comment $comment)
     {
         Cache::flush();
-        Gate::authorize('create',[self::class]);
         Gate::authorize('create',[self::class]);
         $res = $comment->delete();
         if(request()->expectsjson()) return response()->json($res);
         return redirect()->route('comment.index');
-    }
+    }*/
 
     public function delete(Comment $comment){
         Cache::forget('comments');
@@ -152,4 +120,3 @@ class CommentController extends Controller
         return redirect()->route('article.show', ['article'=>$comment->article_id]);
     }
 }
-

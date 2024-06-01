@@ -23,7 +23,7 @@ class ArticleController extends Controller
         $article = Cache::remember('articles'.$currentPage, 3000, function(){
             return Article::latest()->paginate(6);   
         });
-        if(request()->expectsjson()) return response()->json($articles);
+        if(request()->expectsjson()) return response()->json($article);
         return view('article.index', ['articles'=>$article]);
     }
 
